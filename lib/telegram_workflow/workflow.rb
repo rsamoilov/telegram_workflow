@@ -12,6 +12,10 @@ class TelegramWorkflow::Workflow
     @current_user = User.find(@session.read(:user_id)) if @session.read(:user_id)
   end
 
+  def current_user=(user)
+    @session.write(:user_id, user.id)
+  end
+
   def process
     if @params.start?
       @session.clear
