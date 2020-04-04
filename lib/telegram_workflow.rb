@@ -1,6 +1,9 @@
 require "http"
 
 module TelegramWorkflow
+  def self.process(params)
+    Workflow.new(params).process
+  end
 end
 
 require "telegram_workflow/action"
