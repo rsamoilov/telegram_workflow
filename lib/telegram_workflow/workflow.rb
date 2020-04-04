@@ -31,16 +31,13 @@ class TelegramWorkflow::Workflow
     @session.dump
   end
 
-  def redirect_to(action_or_step)
+  def redirect_to(action_or_step, session_params = nil)
     if @redirect_to
       raise TelegramWorkflow::Errors::DoubleRedirect
     end
 
     @redirect_to = action_or_step
-  end
-
-  def current_user=(user)
-    @session.write(:user_id, user.id)
+    @session_params = session_params
   end
 
   private
@@ -75,7 +72,8 @@ class TelegramWorkflow::Workflow
 
   def do_redirect
     action_or_step = @redirect_to
-    @redirect_to = nil
+    session_params = @session_params
+    @redirect_to = @session_params = nil
 
     # reset on_message and on_redirect callbacks
     current_action.__reset_callbacks
@@ -84,6 +82,10 @@ class TelegramWorkflow::Workflow
       set_current_action(action_or_step)
     else
       set_current_step(action_or_step)
+    end
+
+    if session_params
+      @session.action_session.merge!(session_params)
     end
 
     current_action.public_send(current_step) # setup callbacks
