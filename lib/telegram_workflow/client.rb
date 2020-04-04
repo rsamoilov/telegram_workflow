@@ -92,6 +92,15 @@ class TelegramWorkflow::Client
     @api_url = "https://api.telegram.org/bot#{TelegramWorkflow.config.api_token}"
   end
 
+  def __setup_webhook
+    return if get_webhook_info["result"]["url"] == @webhook_url
+
+    delete_webhook
+    set_webhook(url: @webhook_url)
+
+    true
+  end
+
   private
 
   def make_request(action, params)

@@ -11,3 +11,7 @@ require "telegram_workflow/params"
 require "telegram_workflow/session"
 require "telegram_workflow/version"
 require "telegram_workflow/workflow"
+
+TelegramWorkflow.__after_configuration do
+  TelegramWorkflow::Client.new(nil).__setup_webhook
+end
