@@ -4,7 +4,9 @@ class TelegramWorkflow::Workflow
   def initialize(raw_params)
     @params  = TelegramWorkflow::Params.new(raw_params)
     @session = TelegramWorkflow::Session.new(@params)
-    @client  = TelegramWorkflow.config.client.new(@params.chat_id)
+
+    chat_id = @session.read(:chat_id) || @session.write(:chat_id, @params.chat_id)
+    @client = TelegramWorkflow.config.client.new(chat_id)
   end
 
   def current_user
