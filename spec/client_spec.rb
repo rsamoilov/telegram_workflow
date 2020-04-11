@@ -13,7 +13,7 @@ RSpec.describe TelegramWorkflow::Client do
   it "correctly sends requests without params" do
     expect(HTTP).to receive(:post).
       with(/^.+\/leaveChat$/, { json: { chat_id: chat_id } }).
-      and_return(double(parse: nil))
+      and_return(double(code: 200, parse: nil))
 
     subject.leave_chat
   end
@@ -27,8 +27,19 @@ RSpec.describe TelegramWorkflow::Client do
 
     expect(HTTP).to receive(:post).
       with(/^.+\/sendInvoice$/, { json: invoice_params.merge(chat_id: chat_id) }).
-      and_return(double(parse: nil))
+      and_return(double(code: 200, parse: nil))
 
     subject.send_invoice(invoice_params)
+  end
+
+  it "raises an exception" do
+    error_message = "there is no animation in the request"
+
+    expect(HTTP).to receive(:post).and_return(double(
+      code: 400,
+      parse: { "description" => error_message }
+    ))
+
+    expect { subject.send_animation }.to raise_error(TelegramWorkflow::Errors::ApiError, error_message)
   end
 end

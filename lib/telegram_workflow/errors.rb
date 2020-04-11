@@ -4,4 +4,7 @@ module TelegramWorkflow::Errors
       super
     end
   end
+
+  class ApiError < StandardError
+  end
 end

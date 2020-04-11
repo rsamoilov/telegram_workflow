@@ -105,6 +105,9 @@ class TelegramWorkflow::Client
 
   def make_request(action, params)
     response = ::HTTP.post("#{@api_url}/#{action}", json: { chat_id: @chat_id, **params })
-    response.parse
+
+    if response.code != 200
+      raise TelegramWorkflow::Errors::ApiError, response.parse["description"]
+    end
   end
 end
