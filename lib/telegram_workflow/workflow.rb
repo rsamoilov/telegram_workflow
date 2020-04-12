@@ -13,15 +13,6 @@ class TelegramWorkflow::Workflow
     @client = TelegramWorkflow.config.client.new(chat_id)
   end
 
-  def current_user
-    return @current_user if @current_user
-    @current_user = User.find(@session.read(:user_id)) if @session.read(:user_id)
-  end
-
-  def current_user=(user)
-    @session.write(:user_id, user.id)
-  end
-
   def process
     current_action.public_send(current_step) # setup callbacks
     current_action.__run_on_message # run a callback
