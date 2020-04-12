@@ -61,46 +61,65 @@ RSpec.describe TelegramWorkflow::Session do
     end
   end
 
-  context "action session" do
-    it "initializes an action session" do
-      expect(subject.action_session).to be_empty
-      expect(subject.action_session).to be_a(Hash)
+  context "user session" do
+    it "initializes a user session" do
+      expect(subject.user_session).to be_empty
+      expect(subject.user_session).to be_a(Hash)
+    end
+
+    it "can be persisted" do
+      value = 1112
+
+      subject.user_session.merge!(user_id: value)
+      expect(subject.user_session[:user_id]).to eq(value)
+      expect(subject.reload.user_session[:user_id]).to eq(value)
+    end
+
+    it "doesn't affect the main session" do
+      subject.write(:chat_id, 12345)
+      subject.user_session.merge!(user_id: 334)
+      subject.reload
+
+      expect(subject.user_session.keys).to eq(%i(user_id))
+      expect(subject.read(:chat_id)).to be_present
+      expect(subject.read(:user_id)).to be_nil
+    end
+  end
+
+  context "flash session" do
+    it "initializes a flash session" do
+      expect(subject.flash).to be_empty
+      expect(subject.flash).to be_a(Hash)
     end
 
     it "can be persisted" do
       value = "test value"
 
-      subject.action_session.merge!(test_key: value)
-      expect(subject.action_session[:test_key]).to eq(value)
-      expect(subject.reload.action_session[:test_key]).to eq(value)
+      subject.flash.merge!(temp_key: value)
+      expect(subject.flash[:temp_key]).to eq(value)
+      expect(subject.reload.flash[:temp_key]).to eq(value)
     end
 
     it "can store objects" do
-      value = { first_name: "Test", last_name: "User", dob: "01/02/1900" }
+      first_name, last_name, dob = "Test", "User", Date.today
+      subject.flash.merge!(test_key: { first_name: first_name, last_name: last_name, dob: dob })
 
-      subject.action_session.merge!(test_key: value)
-      expect(subject.action_session[:test_key]).to eq(value)
-      expect(subject.reload.action_session[:test_key]).to eq(value)
+      [subject.flash[:test_key], subject.reload.flash[:test_key]].each do |f|
+        expect(f[:first_name]).to eq(first_name)
+        expect(f[:last_name]).to eq(last_name)
+        expect(f[:dob]).to eq(dob)
+      end
     end
 
     it "can be cleared" do
       value = "test value"
 
-      subject.action_session.merge!(test_key: value)
-      expect(subject.reload.action_session[:test_key]).to eq(value)
+      subject.flash.merge!(test_key: value)
+      expect(subject.reload.flash[:test_key]).to eq(value)
 
-      subject.reset_action_session
-      expect(subject.action_session).to be_empty
-      expect(subject.reload.action_session).to be_empty
-    end
-
-    it "doesn't affect the main session" do
-      subject.write(:chat_id, 12345)
-      subject.action_session.merge!(temp_key: "temp value")
-      subject.reload && subject.reset_action_session
-
-      expect(subject.action_session).to be_empty
-      expect(subject.read(:chat_id)).to be_present
+      subject.reset_flash
+      expect(subject.flash).to be_empty
+      expect(subject.reload.flash).to be_empty
     end
   end
 end

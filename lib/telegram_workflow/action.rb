@@ -1,10 +1,11 @@
 class TelegramWorkflow::Action
-  extend Forwardable
+  extend ::Forwardable
   def_delegators :@__workflow, :client, :current_user, :params, :redirect_to, :current_user=
 
-  def initialize(workflow, session)
+  def initialize(workflow, session, flash)
     @__workflow = workflow
     @__session = session
+    @__flash = flash
   end
 
   def on_redirect(&block)
@@ -31,5 +32,9 @@ class TelegramWorkflow::Action
 
   def session
     @__session
+  end
+
+  def flash
+    @__flash
   end
 end

@@ -7,6 +7,7 @@ module GlobalObjectsSpec
         verifier.call_client(client)
         verifier.call_params(params)
         verifier.call_session(session)
+        verifier.call_flash(flash)
       end
     end
   end
@@ -19,6 +20,7 @@ RSpec.describe TelegramWorkflow::Workflow do
     expect(verifier).to receive(:call_client).with(instance_of(TelegramWorkflow::Client)).once
     expect(verifier).to receive(:call_params).with(instance_of(TelegramWorkflow::Params)).once
     expect(verifier).to receive(:call_session).with(instance_of(Hash)).once
+    expect(verifier).to receive(:call_flash).with(instance_of(Hash)).once
     subject.process
   end
 
@@ -36,6 +38,7 @@ RSpec.describe TelegramWorkflow::Workflow do
       expect(verifier).to receive(:call_client).with(custom_client).once
       expect(verifier).to receive(:call_params).with(instance_of(TelegramWorkflow::Params)).once
       expect(verifier).to receive(:call_session).with(instance_of(Hash)).once
+      expect(verifier).to receive(:call_flash).with(instance_of(Hash)).once
       subject.process
     end
   end

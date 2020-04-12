@@ -52,16 +52,16 @@ class TelegramWorkflow::Workflow
         TelegramWorkflow.config.start_action
       end
 
-      action_class.new(self, @session.action_session)
+      action_class.new(self, @session.user_session, @session.flash)
     end
   end
 
   def set_current_action(action_class)
     @session.write(:current_action, action_class.to_s)
     set_current_step(nil)
-    @session.reset_action_session
+    @session.reset_flash
 
-    @current_action = action_class.new(self, @session.action_session)
+    @current_action = action_class.new(self, @session.user_session, @session.flash)
   end
 
   def current_step
@@ -87,7 +87,7 @@ class TelegramWorkflow::Workflow
     end
 
     if session_params
-      @session.action_session.merge!(session_params)
+      @session.flash.merge!(session_params)
     end
 
     current_action.public_send(current_step) # setup callbacks

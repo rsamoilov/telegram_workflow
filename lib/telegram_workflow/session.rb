@@ -30,12 +30,17 @@ class TelegramWorkflow::Session
     @store.write(@session_id, Marshal.dump(@session))
   end
 
-  # this is a temprorary per-action store
-  def action_session
-    @session[:action_session] ||= {}
+  # this is a user space to store some session data separately from the gem session
+  def user_session
+    @session[:user_session] ||= {}
   end
 
-  def reset_action_session
-    @session[:action_session]&.clear
+  # this is a temporary per-action store
+  def flash
+    @session[:flash] ||= {}
+  end
+
+  def reset_flash
+    flash.clear
   end
 end
