@@ -5,6 +5,10 @@ class TelegramWorkflow::Workflow
     @params  = TelegramWorkflow::Params.new(raw_params)
     @session = TelegramWorkflow::Session.new(@params)
 
+    if @params.start?
+      @session.clear
+    end
+
     chat_id = @session.read(:chat_id) || @session.write(:chat_id, @params.chat_id)
     @client = TelegramWorkflow.config.client.new(chat_id)
   end
@@ -19,10 +23,6 @@ class TelegramWorkflow::Workflow
   end
 
   def process
-    if @params.start?
-      @session.clear
-    end
-
     current_action.public_send(current_step) # setup callbacks
     current_action.__run_on_message # run a callback
 
