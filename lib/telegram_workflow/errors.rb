@@ -5,6 +5,12 @@ module TelegramWorkflow::Errors
     end
   end
 
+  class SharedRedirect < StandardError
+    def initialize(msg = "You cannot redirect to a shared step.")
+      super
+    end
+  end
+
   class ApiError < StandardError
   end
 end
