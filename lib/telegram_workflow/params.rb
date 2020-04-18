@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TelegramWorkflow::Params
   def initialize(params)
     @params = params
@@ -45,6 +47,10 @@ class TelegramWorkflow::Params
   end
 
   def start?
-    message_text == "/start".freeze
+    !!message_text&.start_with?("/start")
+  end
+
+  def command?
+    !!message_text&.start_with?("/")
   end
 end
