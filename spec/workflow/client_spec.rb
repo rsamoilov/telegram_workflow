@@ -17,10 +17,10 @@ RSpec.describe TelegramWorkflow::Workflow do
   it "stores chat id in session" do
     expect(TelegramWorkflow::Client).to receive(:new).with(chat_id).twice
 
-    described_class.new(params).process
+    workflow.process
 
     params[:message].delete(:chat)
     params[:message][:text] = "test_message"
-    described_class.new(params).process
+    workflow.process
   end
 end

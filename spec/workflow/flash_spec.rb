@@ -47,7 +47,7 @@ RSpec.describe TelegramWorkflow::Workflow do
     expect(verifier).to receive(:start_action__first_step).with({ key1: "value1" }).once
     expect(verifier).to receive(:start_action__second_step).with({ key1: "value1", key2: "value2" }).once
     expect(verifier).to receive(:next_action__initial_step).with({}).once
-    subject.process
+    workflow.process
   end
 
   it "persists the flash across the requests" do
@@ -55,10 +55,10 @@ RSpec.describe TelegramWorkflow::Workflow do
     allow(verifier).to receive(:start_action__first_step)
     allow(verifier).to receive(:start_action__second_step)
     allow(verifier).to receive(:next_action__initial_step)
-    subject.process
+    workflow.process
 
     params[:message][:text] = "new message"
     expect(verifier).to receive(:next_action__initial_step__on_message).with({ key3: "value3" }).twice
-    2.times { described_class.new(params).process }
+    2.times { workflow.process }
   end
 end

@@ -23,6 +23,6 @@ RSpec.describe TelegramWorkflow::Workflow do
   include_context "set up workflow", start_action: DoubleRedirectSpec::StartAction
 
   it "raises an exception" do
-    expect { subject.process }.to raise_error(TelegramWorkflow::Errors::DoubleRedirect)
+    expect { workflow.process }.to raise_error(TelegramWorkflow::Errors::DoubleRedirect)
   end
 end

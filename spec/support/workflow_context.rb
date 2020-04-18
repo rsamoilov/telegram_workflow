@@ -20,5 +20,7 @@ RSpec.shared_context "set up workflow", shared_context: :metadata do |args|
     }
   end
 
-  subject { described_class.new(params) }
+  def workflow
+    described_class.new(params)
+  end
 end

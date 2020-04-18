@@ -21,7 +21,7 @@ RSpec.describe TelegramWorkflow::Workflow do
     expect(verifier).to receive(:call_params).with(instance_of(TelegramWorkflow::Params)).once
     expect(verifier).to receive(:call_session).with(instance_of(Hash)).once
     expect(verifier).to receive(:call_flash).with(instance_of(Hash)).once
-    subject.process
+    workflow.process
   end
 
   context "when configured" do
@@ -39,7 +39,7 @@ RSpec.describe TelegramWorkflow::Workflow do
       expect(verifier).to receive(:call_params).with(instance_of(TelegramWorkflow::Params)).once
       expect(verifier).to receive(:call_session).with(instance_of(Hash)).once
       expect(verifier).to receive(:call_flash).with(instance_of(Hash)).once
-      subject.process
+      workflow.process
     end
   end
 end

@@ -49,6 +49,6 @@ RSpec.describe TelegramWorkflow::Workflow do
     expect(verifier).to receive(:start_action__second_step__on_redirect).once
     expect(verifier).to receive(:next_action__initial_step__on_redirect).once
     expect(verifier).to receive(:next_action__first_step__on_redirect).once
-    subject.process
+    workflow.process
   end
 end

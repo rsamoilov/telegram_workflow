@@ -46,10 +46,11 @@ RSpec.describe TelegramWorkflow::Workflow do
     expect(verifier).to receive(:start_action__initial_step).with({}).once
     expect(verifier).to receive(:start_action__first_step).with({ key1: "value1" }).once
     expect(verifier).to receive(:start_action__second_step).with({ key1: "value1", key2: "value2" }).once
-    expect(verifier).to receive(:next_action__initial_step).with({ key1: "value1", key2: "value2" }).twice
-    subject.process
+    expect(verifier).to receive(:next_action__initial_step).with({ key1: "value1", key2: "value2" }).once
+    workflow.process
 
     params[:message][:text] = "new message"
-    described_class.new(params).process
+    expect(verifier).to receive(:next_action__initial_step).with({ key1: "value1", key2: "value2" }).once
+    workflow.process
   end
 end

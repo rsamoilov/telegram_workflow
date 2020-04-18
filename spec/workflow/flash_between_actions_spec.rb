@@ -41,6 +41,6 @@ RSpec.describe TelegramWorkflow::Workflow do
     expect(verifier).to receive(:start_action__first_step).with({ key1: "value1" })
     expect(verifier).to receive(:first_action__initial_step).with({ key2: "value2" })
     expect(verifier).to receive(:second_action__initial_step).with({ key2: "value333" })
-    subject.process
+    workflow.process
   end
 end

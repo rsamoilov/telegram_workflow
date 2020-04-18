@@ -35,21 +35,21 @@ RSpec.describe TelegramWorkflow::Workflow do
 
   it "runs shared steps" do
     expect(verifier).to receive(:start_action__initial__on_message).once
-    subject.process
+    workflow.process
 
     params[:message][:text] = "cancel"
     expect(verifier).to receive(:shared__cancel).once
     expect(verifier).not_to receive(:start_action__initial__on_message)
-    subject.process
+    workflow.process
 
     params[:message][:text] = "redirect"
     expect(verifier).to receive(:next_action__initial__on_redirect).once
     expect(verifier).not_to receive(:start_action__initial__on_message)
-    subject.process
+    workflow.process
 
     # next request should continue processing from NextAction
     expect(verifier).to receive(:next_action__initial__on_redirect).once
     expect(verifier).not_to receive(:start_action__initial__on_message)
-    described_class.new(params).process
+    workflow.process
   end
 end

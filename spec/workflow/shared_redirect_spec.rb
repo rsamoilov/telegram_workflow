@@ -12,6 +12,6 @@ RSpec.describe TelegramWorkflow::Workflow do
   include_context "set up workflow", start_action: SharedRedirectSpec::StartAction
 
   it "doesn't allow to redirect to shared step" do
-    expect { subject.process }.to raise_error(TelegramWorkflow::Errors::SharedRedirect)
+    expect { workflow.process }.to raise_error(TelegramWorkflow::Errors::SharedRedirect)
   end
 end
