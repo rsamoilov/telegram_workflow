@@ -8,6 +8,10 @@ class TelegramWorkflow::Action
     @__flash = flash
   end
 
+  def shared
+    :__continue
+  end
+
   def on_redirect(&block)
     @on_redirect = block
   end

@@ -14,8 +14,13 @@ class TelegramWorkflow::Workflow
   end
 
   def process
-    current_action.public_send(current_step) # setup callbacks
-    current_action.__run_on_message # run a callback
+    # run the shared step
+    shared_step_result = current_action.shared
+
+    if shared_step_result == :__continue
+      current_action.public_send(current_step) # setup callbacks
+      current_action.__run_on_message # run a callback
+    end
 
     while @redirect_to
       do_redirect
