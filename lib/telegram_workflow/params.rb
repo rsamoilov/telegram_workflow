@@ -53,4 +53,9 @@ class TelegramWorkflow::Params
   def command?
     !!message_text&.start_with?("/")
   end
+
+  def deep_link_payload
+    match = /\A\/(startgroup|start) (?<payload>.+)\z/.match(message_text)
+    match[:payload] if match
+  end
 end
