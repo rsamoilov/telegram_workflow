@@ -93,15 +93,26 @@ class TelegramWorkflow::Client
   end
 
   def __setup_webhook
-    return if get_webhook_info["result"]["url"] == @webhook_url
+    TelegramWorkflow.config.logger.info "[TelegramWorkflow] Checking webhook setup..."
 
-    delete_webhook
-    set_webhook(url: @webhook_url)
-
-    true
+    on_webhook_changed do
+      TelegramWorkflow.config.logger.info "[TelegramWorkflow] Deleting an old webhook and setting up the new one..."
+      delete_webhook
+      set_webhook(url: @webhook_url)
+    end
   end
 
   private
+
+  def on_webhook_changed
+    webhook_file_path = "tmp/telegram_workflow.webhook_url"
+    current_webhook_url = File.read(webhook_file_path) if File.exists?(webhook_file_path)
+
+    if current_webhook_url != @webhook_url
+      yield
+      File.write(webhook_file_path, @webhook_url)
+    end
+  end
 
   def make_request(action, params)
     response = ::HTTP.post("#{@api_url}/#{action}", json: { chat_id: @chat_id, **params })
