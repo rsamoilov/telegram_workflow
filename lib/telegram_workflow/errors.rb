@@ -13,4 +13,11 @@ module TelegramWorkflow::Errors
 
   class ApiError < StandardError
   end
+
+  class MissingConfiguration < StandardError
+    def initialize(missing_config_params)
+      msg = "Missing required configuration params: #{missing_config_params.join(", ")}"
+      super(msg)
+    end
+  end
 end

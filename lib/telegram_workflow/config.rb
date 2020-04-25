@@ -5,6 +5,8 @@ module TelegramWorkflow
     def configure
       @config ||= Configuration.new
       yield(@config)
+      @config.verify!
+
       @__after_configuration.call
     end
 
@@ -16,10 +18,20 @@ module TelegramWorkflow
   class Configuration
     attr_accessor :session_store, :logger, :client, :start_action, :webhook_url, :api_token
 
+    REQUIRED_PARAMS = %i(session_store start_action webhook_url api_token)
+
     def initialize
       @session_store = Rails.cache
       @logger = Rails.logger
       @client = TelegramWorkflow::Client
+    end
+
+    def verify!
+      blank_params = REQUIRED_PARAMS.select { |p| send(p).nil? }
+
+      if blank_params.any?
+        raise TelegramWorkflow::Errors::MissingConfiguration, blank_params
+      end
     end
   end
 end
