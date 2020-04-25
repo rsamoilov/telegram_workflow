@@ -4,6 +4,7 @@ class TelegramWorkflow::Workflow
   def initialize(raw_params)
     @params  = TelegramWorkflow::Params.new(raw_params)
     @session = TelegramWorkflow::Session.new(@params)
+    @logger = TelegramWorkflow.config.logger
 
     if @params.start?
       @session.clear
@@ -18,8 +19,11 @@ class TelegramWorkflow::Workflow
     shared_step_result = current_action.shared
 
     if shared_step_result == :__continue
+      @logger.info "[TelegramWorkflow] Processing by #{current_action.class.name}##{current_step}"
       current_action.public_send(current_step) # setup callbacks
       current_action.__run_on_message # run a callback
+    else
+      @logger.info "[TelegramWorkflow] Processing by shared handler"
     end
 
     while @redirect_to
