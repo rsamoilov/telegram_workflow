@@ -1,5 +1,6 @@
 class TelegramWorkflow::Client
   AVAILABLE_ACTIONS = %i(
+    getUpdates
     setWebhook
     deleteWebhook
     getWebhookInfo
