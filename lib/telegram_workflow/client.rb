@@ -121,5 +121,7 @@ class TelegramWorkflow::Client
     if response.code != 200
       raise TelegramWorkflow::Errors::ApiError, response.parse["description"]
     end
+
+    response.parse
   end
 end
