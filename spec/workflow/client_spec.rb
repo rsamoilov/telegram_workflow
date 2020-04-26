@@ -19,8 +19,8 @@ RSpec.describe TelegramWorkflow::Workflow do
 
     workflow.process
 
-    params[:message].delete(:chat)
-    params[:message][:text] = "test_message"
+    params["message"].delete("chat")
+    params["message"]["text"] = "test_message"
     workflow.process
   end
 end

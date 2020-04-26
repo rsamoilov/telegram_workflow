@@ -1,5 +1,5 @@
 RSpec.describe TelegramWorkflow::Params do
-  subject { described_class.new(params) }
+  subject { described_class.new(params.with_indifferent_access) }
 
   let!(:params) { {} }
 

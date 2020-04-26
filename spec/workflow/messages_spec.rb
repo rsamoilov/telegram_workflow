@@ -40,11 +40,11 @@ RSpec.describe TelegramWorkflow::Workflow do
 
     expect(verifier).to receive(:next_action__initial__on_message).once
     expect(verifier).to receive(:next_action__next_step__on_redirect).once
-    params[:message][:text] = "new message"
+    params["message"]["text"] = "new message"
     workflow.process
 
     expect(verifier).to receive(:next_action__next_step__on_message).once
-    params[:message][:text] = "another message"
+    params["message"]["text"] = "another message"
     workflow.process
   end
 end

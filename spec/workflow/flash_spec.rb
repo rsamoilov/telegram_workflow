@@ -57,7 +57,7 @@ RSpec.describe TelegramWorkflow::Workflow do
     allow(verifier).to receive(:next_action__initial_step)
     workflow.process
 
-    params[:message][:text] = "new message"
+    params["message"]["text"] = "new message"
     expect(verifier).to receive(:next_action__initial_step__on_message).with({ key3: "value3" }).twice
     2.times { workflow.process }
   end

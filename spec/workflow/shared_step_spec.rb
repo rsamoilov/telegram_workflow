@@ -37,12 +37,12 @@ RSpec.describe TelegramWorkflow::Workflow do
     expect(verifier).to receive(:start_action__initial__on_message).once
     workflow.process
 
-    params[:message][:text] = "cancel"
+    params["message"]["text"] = "cancel"
     expect(verifier).to receive(:shared__cancel).once
     expect(verifier).not_to receive(:start_action__initial__on_message)
     workflow.process
 
-    params[:message][:text] = "redirect"
+    params["message"]["text"] = "redirect"
     expect(verifier).to receive(:next_action__initial__on_redirect).once
     expect(verifier).not_to receive(:start_action__initial__on_message)
     workflow.process

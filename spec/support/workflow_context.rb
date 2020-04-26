@@ -12,10 +12,10 @@ RSpec.shared_context "set up workflow", shared_context: :metadata do |args|
   let!(:user_id) { 2222222 }
   let!(:params) do
     {
-      message: {
-        text: "/start",
-        chat: { id: chat_id },
-        from: { id: user_id }
+      "message" => {
+        "text" => "/start",
+        "chat" => { "id" => chat_id },
+        "from" => { "id" => user_id }
       }
     }
   end

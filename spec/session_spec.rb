@@ -1,6 +1,6 @@
 RSpec.describe TelegramWorkflow::Session do
   let!(:user_id) { 12333444 }
-  let!(:params) { TelegramWorkflow::Params.new(message: { from: { id: user_id } }) }
+  let!(:params) { TelegramWorkflow::Params.new("message" => { "from" => { "id" => user_id } }) }
 
   subject { TestSession.new(params) }
 
