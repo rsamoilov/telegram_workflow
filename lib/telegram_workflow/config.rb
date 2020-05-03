@@ -7,7 +7,7 @@ module TelegramWorkflow
       yield(@config)
       @config.verify!
 
-      @__after_configuration.call
+      @__after_configuration.call(@config)
     end
 
     def __after_configuration(&block)
@@ -18,7 +18,7 @@ module TelegramWorkflow
   class Configuration
     attr_accessor :session_store, :logger, :client, :start_action, :webhook_url, :api_token
 
-    REQUIRED_PARAMS = %i(session_store start_action webhook_url api_token)
+    REQUIRED_PARAMS = %i(session_store start_action api_token)
 
     def initialize
       @session_store = Rails.cache
