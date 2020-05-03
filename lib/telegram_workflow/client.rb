@@ -87,7 +87,7 @@ class TelegramWorkflow::Client
     end
   end
 
-  def initialize(chat_id)
+  def initialize(chat_id = nil)
     @chat_id = chat_id
     @webhook_url = TelegramWorkflow.config.webhook_url
     @api_url = "https://api.telegram.org/bot#{TelegramWorkflow.config.api_token}"

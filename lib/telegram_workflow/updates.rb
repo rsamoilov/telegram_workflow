@@ -6,7 +6,7 @@ class TelegramWorkflow::Updates
   def enum
     Enumerator.new do |y|
       loop do
-        updates = TelegramWorkflow::Client.new(nil).get_updates(@params)["result"]
+        updates = TelegramWorkflow::Client.new.get_updates(@params)["result"]
         updates.each do |update|
           y << update
         end

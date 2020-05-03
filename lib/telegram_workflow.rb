@@ -27,5 +27,5 @@ require "telegram_workflow/updates"
 require "telegram_workflow/workflow"
 
 TelegramWorkflow.__after_configuration do
-  TelegramWorkflow::Client.new(nil).__setup_webhook
+  TelegramWorkflow::Client.new.__setup_webhook
 end
