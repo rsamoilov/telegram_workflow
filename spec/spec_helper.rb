@@ -15,26 +15,12 @@ RSpec.configure do |config|
 
   config.before do
     allow(TelegramWorkflow).to receive(:config).and_return(double(
-      session_store: TestStore.new,
+      session_store: TelegramWorkflow::Stores::InMemory.new,
       logger: double(info: nil, error: nil),
       client: TelegramWorkflow::Client,
       start_action: nil,
       webhook_url: "https://test.webhook.url",
       api_token: "TEST_TOKEN_111"
     ))
-  end
-end
-
-class TestStore
-  def initialize
-    @store = {}
-  end
-
-  def read(key)
-    @store[key]
-  end
-
-  def write(key, value)
-    @store[key] = value
   end
 end

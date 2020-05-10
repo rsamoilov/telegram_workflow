@@ -1,6 +1,9 @@
 require "http"
 
 module TelegramWorkflow
+  module Stores
+  end
+
   def self.process(params)
     Workflow.new(params).process
   end
@@ -25,6 +28,7 @@ require "telegram_workflow/session"
 require "telegram_workflow/version"
 require "telegram_workflow/updates"
 require "telegram_workflow/workflow"
+require "telegram_workflow/stores/in_memory"
 
 TelegramWorkflow.__after_configuration do |config|
   if config.webhook_url

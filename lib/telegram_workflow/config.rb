@@ -1,3 +1,7 @@
+unless defined?(Rails)
+  require "logger"
+end
+
 module TelegramWorkflow
   class << self
     attr_accessor :config
@@ -21,9 +25,15 @@ module TelegramWorkflow
     REQUIRED_PARAMS = %i(session_store start_action api_token)
 
     def initialize
-      @session_store = Rails.cache
-      @logger = Rails.logger
       @client = TelegramWorkflow::Client
+
+      if defined?(Rails)
+        @session_store = Rails.cache
+        @logger = Rails.logger
+      else
+        @session_store = TelegramWorkflow::Stores::InMemory.new
+        @logger = Logger.new(STDOUT)
+      end
     end
 
     def verify!
