@@ -1,10 +1,9 @@
 class TelegramWorkflow::Client
   API_VERSION = "4.8"
+  WebhookFilePath = Pathname.new("tmp/telegram_workflow/webhook_url.txt")
 
   AVAILABLE_ACTIONS = %i(
     getUpdates
-    setWebhook
-    deleteWebhook
     getWebhookInfo
 
     getMe
@@ -95,25 +94,37 @@ class TelegramWorkflow::Client
     @api_url = "https://api.telegram.org/bot#{TelegramWorkflow.config.api_token}"
   end
 
+  def set_webhook(params = {})
+    make_request("setWebhook", params)
+    cached_webhook_url(new_url: @webhook_url)
+  end
+
+  def delete_webhook
+    make_request("deleteWebhook", {})
+    cached_webhook_url(new_url: "")
+  end
+
   def __setup_webhook
     TelegramWorkflow.config.logger.info "[TelegramWorkflow] Checking webhook setup..."
 
-    on_webhook_changed do
-      TelegramWorkflow.config.logger.info "[TelegramWorkflow] Deleting an old webhook and setting up the new one..."
-      delete_webhook
+    if cached_webhook_url != @webhook_url
+      TelegramWorkflow.config.logger.info "[TelegramWorkflow] Setting up a new webhook..."
       set_webhook(url: @webhook_url)
     end
   end
 
   private
 
-  def on_webhook_changed
-    webhook_file_path = "tmp/telegram_workflow.webhook_url"
-    current_webhook_url = File.read(webhook_file_path) if File.exists?(webhook_file_path)
+  def cached_webhook_url(new_url: nil)
+    unless WebhookFilePath.exist?
+      WebhookFilePath.dirname.mkpath
+      WebhookFilePath.write("")
+    end
 
-    if current_webhook_url != @webhook_url
-      yield
-      File.write(webhook_file_path, @webhook_url)
+    if new_url.nil?
+      WebhookFilePath.read
+    else
+      WebhookFilePath.write(new_url)
     end
   end
 
