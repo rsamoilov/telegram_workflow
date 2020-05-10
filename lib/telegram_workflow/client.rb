@@ -1,4 +1,6 @@
 class TelegramWorkflow::Client
+  API_VERSION = "4.8"
+
   AVAILABLE_ACTIONS = %i(
     getUpdates
     setWebhook
