@@ -4,14 +4,15 @@ end
 
 module TelegramWorkflow
   class << self
-    attr_accessor :config
+    def config
+      @config ||= Configuration.new
+    end
 
     def configure
-      @config ||= Configuration.new
-      yield(@config)
-      @config.verify!
+      yield(config)
+      config.verify!
 
-      @__after_configuration.call(@config)
+      @__after_configuration.call(config)
     end
 
     def __after_configuration(&block)
