@@ -1,5 +1,7 @@
 # TelegramWorkflow
 
+[![Build Status](https://travis-ci.org/rsamoilov/telegram_workflow.svg?branch=master)](https://travis-ci.org/rsamoilov/telegram_workflow)
+
 TelegramWorkflow is a simple utility to help you organize the code to create Telegram bots.
 
 It includes the HTTP client, which implements the complete Telegram API and a set of helpers to improve
