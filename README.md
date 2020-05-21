@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/rsamoilov/telegram_workflow.svg?branch=master)](https://travis-ci.org/rsamoilov/telegram_workflow)
 [![Coverage Status](https://coveralls.io/repos/github/rsamoilov/telegram_workflow/badge.svg?branch=coveralls)](https://coveralls.io/github/rsamoilov/telegram_workflow?branch=coveralls)
+[![Maintainability](https://api.codeclimate.com/v1/badges/fd13239262e3550c2193/maintainability)](https://codeclimate.com/github/rsamoilov/telegram_workflow/maintainability)
 
 TelegramWorkflow is a simple utility to help you organize the code to create Telegram bots.
 
