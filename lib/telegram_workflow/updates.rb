@@ -11,7 +11,9 @@ class TelegramWorkflow::Updates
           y << update
         end
 
-        @params.merge! offset: updates.last["update_id"] + 1
+        if updates.any?
+          @params.merge! offset: updates.last["update_id"] + 1
+        end
       end
     end
   end
