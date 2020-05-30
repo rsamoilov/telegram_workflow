@@ -15,7 +15,11 @@ module TelegramWorkflow
     params[:timeout] = timeout if timeout
     params[:allowed_updates] = allowed_updates if allowed_updates
 
-    Updates.new(params).enum
+    (@updates = Updates.new(params)).enum
+  end
+
+  def self.stop_updates
+    @updates && @updates.stop = true
   end
 end
 

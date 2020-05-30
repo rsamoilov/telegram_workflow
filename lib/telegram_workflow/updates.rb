@@ -1,4 +1,6 @@
 class TelegramWorkflow::Updates
+  attr_writer :stop
+
   def initialize(params)
     @params = params
   end
@@ -6,6 +8,8 @@ class TelegramWorkflow::Updates
   def enum
     Enumerator.new do |y|
       loop do
+        break if @stop
+
         updates = TelegramWorkflow::Client.new.get_updates(@params)["result"]
         updates.each do |update|
           y << update
