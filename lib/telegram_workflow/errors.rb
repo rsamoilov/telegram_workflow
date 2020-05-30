@@ -11,6 +11,12 @@ module TelegramWorkflow::Errors
     end
   end
 
+  class NoSession < StandardError
+    def initialize(msg = "Session could not be fetched for this update.")
+      super
+    end
+  end
+
   class ApiError < StandardError
   end
 
