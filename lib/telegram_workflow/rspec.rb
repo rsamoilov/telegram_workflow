@@ -18,6 +18,9 @@ module TelegramActionExampleGroup
           },
           "callback_query" => {
             "data" => ""
+          },
+          "inline_query" => {
+            "query" => ""
           }
         }
       end
@@ -33,9 +36,11 @@ module TelegramActionExampleGroup
   end
 
   module InstanceMethods
-    def send_message(message_text: "", callback_data: "")
+    def send_message(message_text: "", callback_data: "", inline_data: "")
       action_params["message"]["text"] = message_text
       action_params["callback_query"]["data"] = callback_data
+      action_params["inline_query"]["query"] = inline_data
+      yield action_params if block_given?
 
       workflow = TestFlow.new(action_params)
       workflow.example_group = self
