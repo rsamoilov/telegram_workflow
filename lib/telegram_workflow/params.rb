@@ -10,24 +10,25 @@ class TelegramWorkflow::Params
   end
 
   def user
-    @user ||= @params.dig("message", "from") ||
+    @user ||= message&.dig("from") ||
       @params.dig("callback_query", "from") ||
       @params.dig("pre_checkout_query", "from") ||
       @params.dig("shipping_query", "from") ||
       @params.dig("inline_query", "from") ||
-      @params.dig("chosen_inline_result", "from")
+      @params.dig("chosen_inline_result", "from") ||
+      @params.dig("poll_answer", "user")
   end
 
   def language_code
-    user["language_code"]
+    user&.dig("language_code") || "en"
   end
 
   def user_id
-    user["id"]
+    user&.dig("id")
   end
 
   def username
-    user["username"]
+    user&.dig("username")
   end
 
   def chat_id
@@ -38,12 +39,23 @@ class TelegramWorkflow::Params
       @params.dig("edited_channel_post", "chat", "id")
   end
 
+  def message
+    @params["message"] ||
+      @params["edited_message"] ||
+      @params["channel_post"] ||
+      @params["edited_channel_post"]
+  end
+
   def message_text
-    @params.dig("message", "text")
+    message&.dig("text")
   end
 
   def callback_data
     @params.dig("callback_query", "data")
+  end
+
+  def inline_data
+    @params.dig("inline_query", "query")
   end
 
   def start?

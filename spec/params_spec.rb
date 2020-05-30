@@ -28,6 +28,11 @@ RSpec.describe TelegramWorkflow::Params do
       params[:message].delete(:text)
       expect(subject.message_text).to be_nil
     end
+
+    it "returns edited message" do
+      params[:edited_message] = params.delete(:message)
+      expect(subject.message_text).to eq("test message")
+    end
   end
 
   context "#start" do
@@ -217,6 +222,25 @@ RSpec.describe TelegramWorkflow::Params do
     context "with inline query" do
       let!(:params) do
         {
+          channel_post: {
+            from: {
+              id: user_id,
+              language_code: language_code
+            }
+          }
+        }
+      end
+
+      it "returns user params" do
+        expect(subject.user).to be_present
+        expect(subject.user_id).to eq(user_id)
+        expect(subject.language_code).to eq(language_code)
+      end
+    end
+
+    context "with channel post" do
+      let!(:params) do
+        {
           inline_query: {
             from: {
               id: user_id,
@@ -230,6 +254,22 @@ RSpec.describe TelegramWorkflow::Params do
         expect(subject.user).to be_present
         expect(subject.user_id).to eq(user_id)
         expect(subject.language_code).to eq(language_code)
+      end
+    end
+
+    context "with no user" do
+      let!(:params) do
+        {
+          chat: {
+            id: 11111,
+          }
+        }
+      end
+
+      it "returns user params" do
+        expect(subject.user).to be_nil
+        expect(subject.user_id).to be_nil
+        expect(subject.language_code).to eq("en")
       end
     end
   end
@@ -266,6 +306,32 @@ RSpec.describe TelegramWorkflow::Params do
 
       it "returns chat id" do
         expect(subject.chat_id).to eq(chat_id)
+      end
+    end
+  end
+
+  context "#inline_data" do
+    let!(:query) { "test inline query" }
+
+    context "with inline data" do
+      let!(:params) do
+        {
+          inline_query: {
+            query: query
+          }
+        }
+      end
+
+      it "returns inline query" do
+        expect(subject.inline_data).to eq(query)
+      end
+    end
+
+    context "without inline data" do
+      let!(:params) { {} }
+
+      it "doesn't fail" do
+        expect(subject.inline_data).to be_nil
       end
     end
   end
