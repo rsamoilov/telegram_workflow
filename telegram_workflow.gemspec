@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "http"
   spec.add_development_dependency "rspec", "~> 3.9"
-  spec.add_development_dependency "activesupport", "~> 5.0.0"
+  spec.add_development_dependency "activesupport", "~> 5.2.0"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
