@@ -1,7 +1,7 @@
 # TelegramWorkflow
 
 [![Build Status](https://travis-ci.org/rsamoilov/telegram_workflow.svg?branch=master)](https://travis-ci.org/rsamoilov/telegram_workflow)
-[![Coverage Status](https://coveralls.io/repos/github/rsamoilov/telegram_workflow/badge.svg?branch=coveralls)](https://coveralls.io/github/rsamoilov/telegram_workflow?branch=coveralls)
+[![Coverage Status](https://coveralls.io/repos/github/rsamoilov/telegram_workflow/badge.svg?branch=master)](https://coveralls.io/github/rsamoilov/telegram_workflow?branch=master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/fd13239262e3550c2193/maintainability)](https://codeclimate.com/github/rsamoilov/telegram_workflow/maintainability)
 
 TelegramWorkflow is a simple utility to help you organize the code to create Telegram bots.
@@ -241,6 +241,14 @@ end
 
 Be aware that `TelegramWorkflow.updates.each` call is blocking.
 
+`TelegramWorkflow` accepts all the parameters [getUpdates](https://core.telegram.org/bots/api#getupdates) does.
+
+```ruby
+TelegramWorkflow.updates(timeout: 60, allowed_updates: %w(channel_post edited_channel_post)).each do |params|
+  ...
+end
+```
+
 Since most of the time will be spent on waiting for the Telegram API to respond, you might also want to process the updates in parallel:
 
 ```ruby
@@ -251,6 +259,20 @@ pool = Concurrent::CachedThreadPool.new
 TelegramWorkflow.updates.each do |params|
   pool.post { TelegramWorkflow.process(params) }
 end
+```
+
+Use `stop_updates` call to exit the updates loop:
+
+```ruby
+trap "SIGINT" do
+  TelegramWorkflow.stop_updates
+end
+
+# decrease the timeout to wait no more than 10 seconds when exiting
+TelegramWorkflow.updates(timeout: 10).each do |params|
+  TelegramWorkflow.process(params)
+end
+
 ```
 
 ## Customization
@@ -304,7 +326,21 @@ end
 
 ## Testing
 
-Testing utility provides `send_message` helper to emulate messages sent into the chat. Currently it accepts either `message_text` or `callback_data` as arguments.
+Testing utility provides `send_message` helper to emulate messages sent into the chat.
+
+```ruby
+# send a message
+send_message message_text: "text"
+
+# send CallbackQuery data
+send_message callback_data: "data"
+
+# send InlineQuery data
+send_message inline_data: "data"
+
+# customize the params
+send_message { |params| params[:edited_channel_post] = { text: "message" } }
+```
 
 Also, `subject.client` and `subject.flow` spies are available to track redirects and calls to the API client inside your actions.
 Store your tests under `spec/telegram_actions` or tag them with `type: :telegram_action`.
