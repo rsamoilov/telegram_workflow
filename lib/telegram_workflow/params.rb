@@ -70,4 +70,8 @@ class TelegramWorkflow::Params
     match = /\A\/(startgroup|start) (?<payload>.+)\z/.match(message_text)
     match["payload"] if match
   end
+
+  def to_h
+    @params
+  end
 end

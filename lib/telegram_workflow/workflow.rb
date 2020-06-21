@@ -19,7 +19,7 @@ class TelegramWorkflow::Workflow
     shared_step_result = current_action.shared
 
     if shared_step_result == :__continue
-      @logger.info "[TelegramWorkflow] Processing by #{current_action.class.name}##{current_step}"
+      log_request
       current_action.public_send(current_step) # setup callbacks
       current_action.__run_on_message # run a callback
     else
@@ -42,6 +42,14 @@ class TelegramWorkflow::Workflow
   end
 
   private
+
+  def log_request
+    @logger.info "[TelegramWorkflow] Processing by #{current_action.class.name}##{current_step}"
+
+    if TelegramWorkflow.config.webhook_url.nil?
+      @logger.info "[TelegramWorkflow] Parameters: #{@params.to_h}"
+    end
+  end
 
   def current_action
     @current_action ||= begin
