@@ -13,9 +13,9 @@ RSpec.describe TelegramWorkflow::Client do
   it "correctly sends requests without params" do
     expect(HTTP).to receive(:post).
       with(/^.+\/leaveChat$/, { json: { chat_id: chat_id } }).
-      and_return(double(code: 200, parse: nil))
+      and_return(double(code: 200, parse: "leave_chat_response"))
 
-    subject.leave_chat
+    expect(subject.leave_chat).to eq("leave_chat_response")
   end
 
   it "correctly sends requests with params" do
@@ -27,9 +27,9 @@ RSpec.describe TelegramWorkflow::Client do
 
     expect(HTTP).to receive(:post).
       with(/^.+\/sendInvoice$/, { json: invoice_params.merge(chat_id: chat_id) }).
-      and_return(double(code: 200, parse: nil))
+      and_return(double(code: 200, parse: "send_invoice_response"))
 
-    subject.send_invoice(invoice_params)
+    expect(subject.send_invoice(invoice_params)).to eq("send_invoice_response")
   end
 
   it "raises an exception" do
@@ -41,6 +41,13 @@ RSpec.describe TelegramWorkflow::Client do
     ))
 
     expect { subject.send_animation }.to raise_error(TelegramWorkflow::Errors::ApiError, error_message)
+  end
+
+  it "retries on HTTP errors" do
+    expect(HTTP).to receive(:post).and_raise(HTTP::ConnectionError).twice
+    expect(HTTP).to receive(:post).and_return(double(code: 200, parse: "parsed_response")).once
+
+    expect(subject.send_message).to eq("parsed_response")
   end
 
   context "with webhook url caching" do

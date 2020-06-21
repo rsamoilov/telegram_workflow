@@ -129,7 +129,9 @@ class TelegramWorkflow::Client
   end
 
   def make_request(action, params)
-    response = ::HTTP.post("#{@api_url}/#{action}", json: { chat_id: @chat_id, **params })
+    response = ::Retryable.retryable(tries: 3, on: HTTP::ConnectionError) do
+      ::HTTP.post("#{@api_url}/#{action}", json: { chat_id: @chat_id, **params })
+    end
 
     if response.code != 200
       raise TelegramWorkflow::Errors::ApiError, response.parse["description"]

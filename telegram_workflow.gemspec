@@ -14,6 +14,7 @@ Gem::Specification.new do |spec|
   spec.metadata["source_code_uri"] = spec.homepage
 
   spec.add_dependency "http"
+  spec.add_dependency "retryable"
   spec.add_development_dependency "rspec", "~> 3.9"
   spec.add_development_dependency "activesupport", "~> 5.2.0"
 

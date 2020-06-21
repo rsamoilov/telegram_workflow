@@ -1,4 +1,5 @@
 require "http"
+require "retryable"
 
 module TelegramWorkflow
   module Stores
