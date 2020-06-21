@@ -7,7 +7,7 @@ class TelegramWorkflow::Workflow
     @logger = TelegramWorkflow.config.logger
 
     if @params.start?
-      @session.clear
+      set_current_action(TelegramWorkflow.config.start_action)
     end
 
     chat_id = @session.read(:chat_id) || @session.write(:chat_id, @params.chat_id)
