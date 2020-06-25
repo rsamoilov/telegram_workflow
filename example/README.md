@@ -9,7 +9,7 @@ The following diagram will help you understand the bot's flow:
 
 ## Running the bot
 
-First, open [main.rb](example/main.rb) and configure the bot with your API token:
+First, open [main.rb](main.rb) and configure the bot with your API token:
 
 ```diff
 TelegramWorkflow.configure do |config|
@@ -76,4 +76,4 @@ After a user has sent a message, `TelegramWorkflow.process` will initialize the 
 
 ## Actions
 
-Check out the bot's code under [actions](example/actions) folder.
+Check out the bot's code under [actions](actions) folder.
