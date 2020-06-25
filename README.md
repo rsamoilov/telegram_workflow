@@ -381,6 +381,10 @@ end
 
 As you can see, testing utility starts the flow automatically, calling `initial` step on `described_class`.
 
+## Example
+
+Check out an example of a bot under [example](example) folder.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
