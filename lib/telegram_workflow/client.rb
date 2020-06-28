@@ -129,8 +129,11 @@ class TelegramWorkflow::Client
   end
 
   def make_request(action, params)
+    has_file_params = params.any? { |_, param| param.is_a?(TelegramWorkflow::InputFile) }
+    request_type = has_file_params ? :form : :json
+
     response = ::Retryable.retryable(tries: 3, on: HTTP::ConnectionError) do
-      ::HTTP.post("#{@api_url}/#{action}", json: { chat_id: @chat_id, **params })
+      ::HTTP.post("#{@api_url}/#{action}", request_type => { chat_id: @chat_id, **params })
     end
 
     if response.code != 200

@@ -140,6 +140,19 @@ client.send_location latitude: 40.748, longitude: -73.985, live_period: 120
 
 `chat_id` parameter should be omitted.
 
+Use `TelegramWorkflow::InputFile` to upload a file:
+
+```ruby
+client.send_photo photo: TelegramWorkflow::InputFile.new("/Users/telegram/images/image1.jpg")
+```
+
+`filename` and `content_type` fields can be customized:
+
+```ruby
+file = StringIO.new("hello!")
+client.send_document document: TelegramWorkflow::InputFile.new(file, filename: "hello.txt")
+```
+
 ### session
 
 This is a persistent store to save the data associated with a user, e.g. current user's id, some settings or anything you would store in a session in a regular web application.

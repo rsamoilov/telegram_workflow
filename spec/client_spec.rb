@@ -50,6 +50,66 @@ RSpec.describe TelegramWorkflow::Client do
     expect(subject.send_message).to eq("parsed_response")
   end
 
+  context "when uploading a file" do
+    let!(:file) { File.new(File.expand_path('fixtures/hello.txt', __dir__)) }
+    let!(:string_io) { StringIO.new("hello world!") }
+
+    it "uploads a file" do
+      expect(HTTP).to receive(:post) do |url, args|
+        expect(url).to match(/^.+\/sendDocument$/)
+
+        expect(args[:json]).to be_nil
+        expect(args[:form]).to be_present
+        expect(args[:form][:chat_id]).to eq(chat_id)
+
+        document = args[:form][:document]
+        expect(document).to be_present
+        expect(document.to_s.strip).to eq("hello!")
+        expect(document.filename).to eq("hello.txt")
+      end.and_return(double(code: 200, parse: "document_response"))
+
+      response = subject.send_document document: TelegramWorkflow::InputFile.new(file)
+      expect(response).to eq("document_response")
+    end
+
+    it "uploads string IO" do
+      expect(HTTP).to receive(:post) do |url, args|
+        expect(url).to match(/^.+\/sendDocument$/)
+
+        expect(args[:json]).to be_nil
+        expect(args[:form]).to be_present
+        expect(args[:form][:chat_id]).to eq(chat_id)
+
+        document = args[:form][:document]
+        expect(document).to be_present
+        expect(document.to_s).to eq("hello world!")
+        expect(document.filename).to start_with("stream-")
+        expect(document.content_type).to eq("application/octet-stream")
+      end.and_return(double(code: 200, parse: "document_response"))
+
+      response = subject.send_document document: TelegramWorkflow::InputFile.new(string_io)
+      expect(response).to eq("document_response")
+    end
+
+    it "allows to change content type" do
+      expect(HTTP).to receive(:post) do |_, args|
+        expect(args[:form][:document].content_type).to eq("image/jpeg")
+      end.and_return(double(code: 200, parse: "document_response"))
+
+      response = subject.send_document document: TelegramWorkflow::InputFile.new(file, content_type: "image/jpeg")
+      expect(response).to eq("document_response")
+    end
+
+    it "allows to change filename" do
+      expect(HTTP).to receive(:post) do |_, args|
+        expect(args[:form][:document].filename).to eq("hello.txt")
+      end.and_return(double(code: 200, parse: "document_response"))
+
+      response = subject.send_document document: TelegramWorkflow::InputFile.new(string_io, filename: "hello.txt")
+      expect(response).to eq("document_response")
+    end
+  end
+
   context "with webhook url caching" do
     subject { described_class.new }
 

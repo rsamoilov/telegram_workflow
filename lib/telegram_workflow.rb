@@ -33,6 +33,7 @@ require "telegram_workflow/session"
 require "telegram_workflow/version"
 require "telegram_workflow/updates"
 require "telegram_workflow/workflow"
+require "telegram_workflow/input_file"
 require "telegram_workflow/stores/in_memory"
 require "telegram_workflow/stores/file"
 
