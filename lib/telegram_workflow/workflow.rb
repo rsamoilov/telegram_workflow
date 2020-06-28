@@ -36,6 +36,7 @@ class TelegramWorkflow::Workflow
   def redirect_to(action_or_step, session_params = nil)
     raise TelegramWorkflow::Errors::DoubleRedirect if @redirect_to
     raise TelegramWorkflow::Errors::SharedRedirect if action_or_step == :shared
+    raise TelegramWorkflow::Errors::StartRedirect  if action_or_step == TelegramWorkflow.config.start_action
 
     @redirect_to = action_or_step
     @session_params = session_params
