@@ -1,5 +1,5 @@
 class TelegramWorkflow::Client
-  API_VERSION = "4.8"
+  API_VERSION = "4.9"
   WebhookFilePath = Pathname.new("tmp/telegram_workflow/webhook_url.txt")
 
   AVAILABLE_ACTIONS = %i(
