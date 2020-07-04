@@ -1,6 +1,6 @@
 class TelegramWorkflow::Client
   API_VERSION = "4.9"
-  WebhookFilePath = Pathname.new("tmp/telegram_workflow/webhook_url.txt")
+  WebhookConfigPath = Pathname.new("tmp/telegram_workflow/webhook_config.txt")
 
   AVAILABLE_ACTIONS = %i(
     getUpdates
@@ -90,45 +90,46 @@ class TelegramWorkflow::Client
 
   def initialize(chat_id = nil)
     @chat_id = chat_id
-    @webhook_url = TelegramWorkflow.config.webhook_url
     @api_url = "https://api.telegram.org/bot#{TelegramWorkflow.config.api_token}"
   end
 
   def set_webhook(params = {})
     make_request("setWebhook", params)
-    cached_webhook_url(new_url: @webhook_url)
+    cached_webhook_config(params)
   end
 
   def delete_webhook
-    make_request("deleteWebhook", {})
-    cached_webhook_url(new_url: "")
+    make_request("deleteWebhook")
+    cached_webhook_config({})
   end
 
-  def __setup_webhook
+  def __setup_webhook(webhook_url = TelegramWorkflow.config.webhook_url, params = {})
     TelegramWorkflow.config.logger.info "[TelegramWorkflow] Checking webhook setup..."
 
-    if cached_webhook_url != @webhook_url
+    webhook_params = { url: webhook_url, **params }
+
+    if cached_webhook_config != webhook_params
       TelegramWorkflow.config.logger.info "[TelegramWorkflow] Setting up a new webhook..."
-      set_webhook(url: @webhook_url)
+      set_webhook(webhook_params)
     end
   end
 
   private
 
-  def cached_webhook_url(new_url: nil)
-    unless WebhookFilePath.exist?
-      WebhookFilePath.dirname.mkpath
-      WebhookFilePath.write("")
+  def cached_webhook_config(new_config = nil)
+    unless WebhookConfigPath.exist?
+      WebhookConfigPath.dirname.mkpath
+      WebhookConfigPath.write(Marshal.dump({}))
     end
 
-    if new_url.nil?
-      WebhookFilePath.read
+    if new_config.nil?
+      Marshal.load(WebhookConfigPath.read)
     else
-      WebhookFilePath.write(new_url)
+      WebhookConfigPath.write(Marshal.dump(new_config))
     end
   end
 
-  def make_request(action, params)
+  def make_request(action, params = {})
     has_file_params = params.any? { |_, param| param.is_a?(TelegramWorkflow::InputFile) }
     request_type = has_file_params ? :form : :json
 

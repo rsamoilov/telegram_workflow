@@ -21,12 +21,14 @@ module TelegramWorkflow
   end
 
   class Configuration
-    attr_accessor :session_store, :logger, :client, :start_action, :webhook_url, :api_token
+    attr_accessor :session_store, :logger, :client, :start_action, :webhook_url, :api_token,
+                  :webhook_params
 
     REQUIRED_PARAMS = %i(session_store start_action api_token)
 
     def initialize
       @client = TelegramWorkflow::Client
+      @webhook_params = {}
 
       if defined?(Rails)
         @session_store = Rails.cache

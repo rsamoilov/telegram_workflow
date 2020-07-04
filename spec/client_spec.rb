@@ -112,6 +112,7 @@ RSpec.describe TelegramWorkflow::Client do
 
   context "with webhook url caching" do
     subject { described_class.new }
+    let(:webhook_url) { TelegramWorkflow.config.webhook_url }
 
     after do
       FileUtils.remove_dir "tmp", true
@@ -122,7 +123,7 @@ RSpec.describe TelegramWorkflow::Client do
       expect(HTTP).to receive(:post).with(/^.+\/setWebhook$/, { json: hash_including(url: url) }).
         and_return(double(code: 200, parse: nil))
 
-      expect { subject.set_webhook(url: url) }.to change { described_class::WebhookFilePath.exist? }.to(true)
+      expect { subject.set_webhook(url: url) }.to change { described_class::WebhookConfigPath.exist? }.to(true)
     end
 
     it "correctly deletes the url" do
@@ -130,33 +131,62 @@ RSpec.describe TelegramWorkflow::Client do
         and_return(double(code: 200, parse: nil))
 
       subject.delete_webhook
-      expect(described_class::WebhookFilePath.read).to eq("")
+      config = described_class::WebhookConfigPath.read
+      expect(Marshal.load(config)).to be_blank
     end
 
     it "correctly caches the url" do
       expect(HTTP).to receive(:post).
-        with(/^.+\/setWebhook$/, { json: hash_including(url: TelegramWorkflow.config.webhook_url) }).
+        with(/^.+\/setWebhook$/, { json: hash_including(url: webhook_url) }).
         once.
         and_return(double(code: 200, parse: nil))
 
       2.times { subject.__setup_webhook }
     end
 
-    it "correctly changes the url" do
+    it "correctly caches the webhook params" do
+      allowed_updates = %w(message edited_message)
+
       expect(HTTP).to receive(:post).
-        with(/^.+\/setWebhook$/, { json: hash_including(url: TelegramWorkflow.config.webhook_url) }).
+        with(/^.+\/setWebhook$/, { json: hash_including(url: webhook_url, allowed_updates: allowed_updates) }).
         once.
         and_return(double(code: 200, parse: nil))
-      subject.__setup_webhook
+
+      2.times { subject.__setup_webhook(webhook_url, allowed_updates: allowed_updates) }
+    end
+
+    it "correctly changes the url" do
+      expect(HTTP).to receive(:post).
+        with(/^.+\/setWebhook$/, { json: hash_including(url: webhook_url) }).
+        once.
+        and_return(double(code: 200, parse: nil))
+      subject.__setup_webhook(webhook_url)
 
       new_url = "https://new.test.telegram.webhook.url"
-      allow(TelegramWorkflow.config).to receive(:webhook_url).and_return(new_url)
 
       expect(HTTP).to receive(:post).
         with(/^.+\/setWebhook$/, { json: hash_including(url: new_url) }).
         once.
         and_return(double(code: 200, parse: nil))
-      described_class.new.__setup_webhook
+      described_class.new.__setup_webhook(new_url)
+    end
+
+    it "correctly changes the webhook params" do
+      allowed_updates = %w(edited_message)
+
+      expect(HTTP).to receive(:post).
+        with(/^.+\/setWebhook$/, { json: hash_including(url: webhook_url, allowed_updates: allowed_updates) }).
+        once.
+        and_return(double(code: 200, parse: nil))
+      subject.__setup_webhook(webhook_url, allowed_updates: allowed_updates)
+
+      new_allowed_updates = allowed_updates + %w(message)
+
+      expect(HTTP).to receive(:post).
+        with(/^.+\/setWebhook$/, { json: hash_including(url: webhook_url, allowed_updates: new_allowed_updates) }).
+        once.
+        and_return(double(code: 200, parse: nil))
+      described_class.new.__setup_webhook(webhook_url, allowed_updates: new_allowed_updates)
     end
   end
 end

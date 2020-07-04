@@ -39,6 +39,6 @@ require "telegram_workflow/stores/file"
 
 TelegramWorkflow.__after_configuration do |config|
   if config.webhook_url
-    TelegramWorkflow::Client.new.__setup_webhook
+    TelegramWorkflow::Client.new.__setup_webhook(config.webhook_url, config.webhook_params)
   end
 end
