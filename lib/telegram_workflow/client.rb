@@ -106,7 +106,7 @@ class TelegramWorkflow::Client
   def __setup_webhook(webhook_url = TelegramWorkflow.config.webhook_url, params = {})
     TelegramWorkflow.config.logger.info "[TelegramWorkflow] Checking webhook setup..."
 
-    webhook_params = { url: webhook_url, **params }
+    webhook_params = { url: webhook_url, allowed_updates: [], **params }
 
     if cached_webhook_config != webhook_params
       TelegramWorkflow.config.logger.info "[TelegramWorkflow] Setting up a new webhook..."

@@ -188,5 +188,23 @@ RSpec.describe TelegramWorkflow::Client do
         and_return(double(code: 200, parse: nil))
       described_class.new.__setup_webhook(webhook_url, allowed_updates: new_allowed_updates)
     end
+
+    it "resets allowed_updates setting" do
+      webhook_params = { allowed_updates: %w(edited_message) }
+
+      expect(HTTP).to receive(:post).
+        with(/^.+\/setWebhook$/, { json: hash_including(url: webhook_url, **webhook_params) }).
+        once.
+        and_return(double(code: 200, parse: nil))
+      subject.__setup_webhook(webhook_url, webhook_params)
+
+      new_webhook_params = {}
+
+      expect(HTTP).to receive(:post).
+        with(/^.+\/setWebhook$/, { json: hash_including(url: webhook_url, allowed_updates: []) }).
+        once.
+        and_return(double(code: 200, parse: nil))
+      described_class.new.__setup_webhook(webhook_url, new_webhook_params)
+    end
   end
 end
