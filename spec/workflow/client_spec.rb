@@ -15,7 +15,7 @@ RSpec.describe TelegramWorkflow::Workflow do
   include_context "set up workflow", start_action: ClientSpec::StartAction
 
   it "stores chat id in session" do
-    expect(TelegramWorkflow::Client).to receive(:new).with(chat_id).twice
+    expect(TelegramWorkflow::Client).to receive(:new).with(chat_id).twice.and_call_original
 
     workflow.process
 

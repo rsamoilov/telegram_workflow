@@ -84,9 +84,13 @@ class TelegramWorkflow::Client
     method_name = action.to_s.gsub(/([a-z\d])([A-Z])/, '\1_\2').downcase
 
     define_method(method_name) do |params = {}|
-      make_request(action, params)
+      @inline ?
+        save_request(action, params) :
+        make_request(action, params)
     end
   end
+
+  attr_accessor :inline, :inline_request
 
   def initialize(chat_id = nil)
     @chat_id = chat_id
@@ -127,6 +131,11 @@ class TelegramWorkflow::Client
     else
       WebhookConfigPath.write(Marshal.dump(new_config))
     end
+  end
+
+  def save_request(action, params = {})
+    raise TelegramWorkflow::Errors::DoubleInlineRequest if @inline_request
+    @inline_request = { method: action, chat_id: @chat_id, **params }
   end
 
   def make_request(action, params = {})

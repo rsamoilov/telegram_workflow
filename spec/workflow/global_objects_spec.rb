@@ -11,6 +11,9 @@ module GlobalObjectsSpec
       end
     end
   end
+
+  class CustomClient < TelegramWorkflow::Client
+  end
 end
 
 RSpec.describe TelegramWorkflow::Workflow do
@@ -25,17 +28,13 @@ RSpec.describe TelegramWorkflow::Workflow do
   end
 
   context "when configured" do
-    let!(:custom_client) { "this is a test client object" }
-
     before do
-      client_double = double
-      expect(client_double).to receive(:new).with(chat_id).once.and_return(custom_client)
-
-      allow(TelegramWorkflow.config).to receive(:client).and_return(client_double)
+      expect(GlobalObjectsSpec::CustomClient).to receive(:new).with(chat_id).once.and_call_original
+      allow(TelegramWorkflow.config).to receive(:client).and_return(GlobalObjectsSpec::CustomClient)
     end
 
     it "has access to configured global objects" do
-      expect(verifier).to receive(:call_client).with(custom_client).once
+      expect(verifier).to receive(:call_client).with(instance_of(GlobalObjectsSpec::CustomClient)).once
       expect(verifier).to receive(:call_params).with(instance_of(TelegramWorkflow::Params)).once
       expect(verifier).to receive(:call_session).with(instance_of(Hash)).once
       expect(verifier).to receive(:call_flash).with(instance_of(Hash)).once

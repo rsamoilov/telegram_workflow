@@ -31,6 +31,8 @@ class TelegramWorkflow::Workflow
     end
 
     @session.dump
+
+    @client.inline_request
   end
 
   def redirect_to(action_or_step, session_params = nil)

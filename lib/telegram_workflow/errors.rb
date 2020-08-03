@@ -23,6 +23,12 @@ module TelegramWorkflow::Errors
     end
   end
 
+  class DoubleInlineRequest < StandardError
+    def initialize(msg = "Cannot send more than one request in a row in inline mode.")
+      super
+    end
+  end
+
   class ApiError < StandardError
   end
 

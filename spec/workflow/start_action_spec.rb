@@ -15,6 +15,6 @@ RSpec.describe TelegramWorkflow::Workflow do
   it "runs callbacks" do
     expect(verifier).to receive(:start_action__initial__on_message).once
     expect(verifier).not_to receive(:start_action__initial__on_redirect)
-    workflow.process
+    expect(workflow.process).to be_nil
   end
 end
