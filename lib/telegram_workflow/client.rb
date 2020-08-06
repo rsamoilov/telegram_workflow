@@ -91,6 +91,7 @@ class TelegramWorkflow::Client
   end
 
   attr_accessor :inline, :inline_request
+  attr_reader :api_url
 
   def initialize(chat_id = nil)
     @chat_id = chat_id
