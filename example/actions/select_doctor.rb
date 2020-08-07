@@ -12,7 +12,7 @@ class Actions::SelectDoctor < TelegramWorkflow::Action
 
     on_message do
       # pass `specialty` parameter to the next action
-      # https://github.com/rsamoilov/telegram_workflow#redirect_toaction_or_class-flash_params--
+      # https://github.com/rsamoilov/telegram_workflow/wiki/Public-API#redirect_toaction_or_class-flash_params--
       redirect_to Actions::CreateAppointment, specialty: params.callback_data
     end
   end
