@@ -1,5 +1,5 @@
 class TelegramWorkflow::Client
-  API_VERSION = "4.9"
+  API_VERSION = "5.0"
   WebhookConfigPath = Pathname.new("tmp/telegram_workflow/webhook_config.txt")
 
   AVAILABLE_ACTIONS = %i(
@@ -9,6 +9,7 @@ class TelegramWorkflow::Client
     getMe
     sendMessage
     forwardMessage
+    copyMessage
     sendPhoto
     sendAudio
     sendDocument
@@ -40,6 +41,7 @@ class TelegramWorkflow::Client
     setChatDescription
     pinChatMessage
     unpinChatMessage
+    unpinAllChatMessages
     leaveChat
     getChat
     getChatAdministrators
@@ -78,6 +80,9 @@ class TelegramWorkflow::Client
     sendGame
     setGameScore
     getGameHighScores
+
+    logOut
+    close
   )
 
   AVAILABLE_ACTIONS.each do |action|
@@ -103,9 +108,9 @@ class TelegramWorkflow::Client
     cached_webhook_config(params)
   end
 
-  def delete_webhook
-    make_request("deleteWebhook")
-    cached_webhook_config({})
+  def delete_webhook(params = {})
+    make_request("deleteWebhook", params)
+    cached_webhook_config(params)
   end
 
   def __setup_webhook(webhook_url = TelegramWorkflow.config.webhook_url, params = {})
