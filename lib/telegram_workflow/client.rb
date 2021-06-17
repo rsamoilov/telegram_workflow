@@ -1,5 +1,5 @@
 class TelegramWorkflow::Client
-  API_VERSION = "5.0"
+  API_VERSION = "5.1"
   WebhookConfigPath = Pathname.new("tmp/telegram_workflow/webhook_config.txt")
 
   AVAILABLE_ACTIONS = %i(
@@ -35,6 +35,9 @@ class TelegramWorkflow::Client
     setChatAdministratorCustomTitle
     setChatPermissions
     exportChatInviteLink
+    createChatInviteLink
+    editChatInviteLink
+    revokeChatInviteLink
     setChatPhoto
     deleteChatPhoto
     setChatTitle
