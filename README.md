@@ -1,6 +1,6 @@
 # TelegramWorkflow
 
-[![Build Status](https://travis-ci.org/rsamoilov/telegram_workflow.svg?branch=master)](https://travis-ci.org/rsamoilov/telegram_workflow)
+![Build Status](https://github.com/rsamoilov/telegram_workflow/actions/workflows/ruby.yml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/rsamoilov/telegram_workflow/badge.svg?branch=master)](https://coveralls.io/github/rsamoilov/telegram_workflow?branch=master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/fd13239262e3550c2193/maintainability)](https://codeclimate.com/github/rsamoilov/telegram_workflow/maintainability)
 
