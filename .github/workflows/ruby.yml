@@ -23,3 +23,19 @@ jobs:
         bundler-cache: true
     - name: Run tests
       run: bundle exec rake
+    - name: Coveralls Parallel
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        flag-name: run-${{ matrix.ruby-version }}
+        parallel: true
+
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        parallel-finished: true
