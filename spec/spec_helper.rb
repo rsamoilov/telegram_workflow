@@ -1,6 +1,6 @@
 require "simplecov"
 
-SimpleCov.start "telegram_workflow" do
+SimpleCov.start "rails" do
   if ENV["CI"]
     require "simplecov-lcov"
 
