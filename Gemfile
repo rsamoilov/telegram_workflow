@@ -8,4 +8,5 @@ gem "rspec", "~> 3.0"
 
 group :test do
   gem "coveralls_reborn", require: false
+  gem "dbm"
 end
