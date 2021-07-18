@@ -1,5 +1,5 @@
 class TelegramWorkflow::Client
-  API_VERSION = "5.1"
+  API_VERSION = "5.3"
   WebhookConfigPath = Pathname.new("tmp/telegram_workflow/webhook_config.txt")
 
   AVAILABLE_ACTIONS = %i(
@@ -29,6 +29,7 @@ class TelegramWorkflow::Client
     getUserProfilePhotos
     getFile
     kickChatMember
+    banChatMember
     unbanChatMember
     restrictChatMember
     promoteChatMember
@@ -49,11 +50,13 @@ class TelegramWorkflow::Client
     getChat
     getChatAdministrators
     getChatMembersCount
+    getChatMemberCount
     getChatMember
     setChatStickerSet
     deleteChatStickerSet
     answerCallbackQuery
     setMyCommands
+    deleteMyCommands
     getMyCommands
 
     editMessageText
@@ -88,10 +91,19 @@ class TelegramWorkflow::Client
     close
   )
 
+  DEPRECATED_ACTIONS = {
+    kickChatMember: :banChatMember,
+    getChatMembersCount: :getChatMemberCount
+  }
+
   AVAILABLE_ACTIONS.each do |action|
     method_name = action.to_s.gsub(/([a-z\d])([A-Z])/, '\1_\2').downcase
 
     define_method(method_name) do |params = {}|
+      if deprecated_in_favor_of = DEPRECATED_ACTIONS[action]
+        TelegramWorkflow.config.logger.warn "[TelegramWorkflow] #{action} action is deprecated. Use #{deprecated_in_favor_of} action instead."
+      end
+
       @inline ?
         save_request(action, params) :
         make_request(action, params)

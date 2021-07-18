@@ -207,4 +207,27 @@ RSpec.describe TelegramWorkflow::Client do
       described_class.new.__setup_webhook(webhook_url, new_webhook_params)
     end
   end
+
+  context "with deprecated action" do
+    it "allows to call deprecated actions" do
+      expect(HTTP).to receive(:post).
+        with(/^.+\/kickChatMember$/, { json: { chat_id: chat_id } }).
+        and_return(double(code: 200, parse: "kick_chat_member_response"))
+
+      expect(TelegramWorkflow.config.logger).to receive(:warn).with(
+        "[TelegramWorkflow] kickChatMember action is deprecated. Use banChatMember action instead."
+      )
+
+      expect(subject.kick_chat_member).to eq("kick_chat_member_response")
+    end
+
+    it "allows to call new actions" do
+      expect(HTTP).to receive(:post).
+        with(/^.+\/banChatMember$/, { json: { chat_id: chat_id } }).
+        and_return(double(code: 200, parse: "ban_chat_member_response"))
+
+      expect(TelegramWorkflow.config.logger).not_to receive(:warn)
+      expect(subject.ban_chat_member).to eq("ban_chat_member_response")
+    end
+  end
 end
