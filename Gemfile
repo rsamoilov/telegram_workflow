@@ -7,5 +7,5 @@ gem "rake", "~> 12.0"
 gem "rspec", "~> 3.0"
 
 group :test do
-  gem "coveralls", require: false
+  gem "coveralls_reborn", require: false
 end
