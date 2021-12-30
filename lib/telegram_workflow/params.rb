@@ -33,11 +33,15 @@ class TelegramWorkflow::Params
   end
 
   def chat_id
-    @params.dig("message", "chat", "id") ||
-      @params.dig("callback_query", "message", "chat", "id") ||
-      @params.dig("edited_message", "chat", "id") ||
-      @params.dig("channel_post", "chat", "id") ||
-      @params.dig("edited_channel_post", "chat", "id")
+    chat&.dig("id")
+  end
+
+  def chat
+    @params.dig("message", "chat") ||
+      @params.dig("callback_query", "message", "chat") ||
+      @params.dig("edited_message", "chat") ||
+      @params.dig("channel_post", "chat") ||
+      @params.dig("edited_channel_post", "chat")
   end
 
   def message

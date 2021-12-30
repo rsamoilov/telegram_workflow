@@ -4,7 +4,7 @@ RSpec.describe TelegramWorkflow::Params do
   let!(:params) { {} }
 
   it "doesn't fail in case there are no required keys" do
-    methods = %i(user chat_id message_text callback_data start?)
+    methods = %i(user chat message_text callback_data start?)
 
     methods.each do |method_name|
       expect(subject.send(method_name)).to be_falsey
@@ -274,7 +274,7 @@ RSpec.describe TelegramWorkflow::Params do
     end
   end
 
-  context "#chat_id" do
+  context "#chat" do
     let(:chat_id) { 2222 }
 
     context "with message" do
@@ -288,7 +288,8 @@ RSpec.describe TelegramWorkflow::Params do
         }
       end
 
-      it "returns chat id" do
+      it "returns chat params" do
+        expect(subject.chat).to be_present
         expect(subject.chat_id).to eq(chat_id)
       end
     end
@@ -304,7 +305,8 @@ RSpec.describe TelegramWorkflow::Params do
         }
       end
 
-      it "returns chat id" do
+      it "returns chat params" do
+        expect(subject.chat).to be_present
         expect(subject.chat_id).to eq(chat_id)
       end
     end
