@@ -16,7 +16,8 @@ class TelegramWorkflow::Params
       @params.dig("shipping_query", "from") ||
       @params.dig("inline_query", "from") ||
       @params.dig("chosen_inline_result", "from") ||
-      @params.dig("poll_answer", "user")
+      @params.dig("poll_answer", "user") ||
+      @params.dig("chat_join_request", "from")
   end
 
   def language_code
