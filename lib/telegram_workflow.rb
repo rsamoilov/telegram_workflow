@@ -35,7 +35,6 @@ require "telegram_workflow/updates"
 require "telegram_workflow/workflow"
 require "telegram_workflow/input_file"
 require "telegram_workflow/stores/in_memory"
-require "telegram_workflow/stores/file"
 
 TelegramWorkflow.__after_configuration do |config|
   if config.webhook_url
