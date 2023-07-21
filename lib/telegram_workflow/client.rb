@@ -126,7 +126,7 @@ class TelegramWorkflow::Client
 
     define_method(method_name) do |params = {}|
       if deprecated_in_favor_of = DEPRECATED_ACTIONS[action]
-        TelegramWorkflow.config.logger.warn "[TelegramWorkflow] #{action} action is deprecated. Use #{deprecated_in_favor_of} action instead."
+        TelegramWorkflow.config.logger.warn "#{action} action is deprecated. Use #{deprecated_in_favor_of} action instead."
       end
 
       @inline ?
@@ -154,12 +154,12 @@ class TelegramWorkflow::Client
   end
 
   def __setup_webhook(webhook_url = TelegramWorkflow.config.webhook_url, params = {})
-    TelegramWorkflow.config.logger.info "[TelegramWorkflow] Checking webhook setup..."
+    TelegramWorkflow.config.logger.info "Checking webhook setup..."
 
     webhook_params = { url: webhook_url, allowed_updates: [], **params }
 
     if cached_webhook_config != webhook_params
-      TelegramWorkflow.config.logger.info "[TelegramWorkflow] Setting up a new webhook..."
+      TelegramWorkflow.config.logger.info "Setting up a new webhook..."
       set_webhook(webhook_params)
     end
   end

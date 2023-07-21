@@ -215,7 +215,7 @@ RSpec.describe TelegramWorkflow::Client do
         and_return(double(code: 200, parse: "kick_chat_member_response"))
 
       expect(TelegramWorkflow.config.logger).to receive(:warn).with(
-        "[TelegramWorkflow] kickChatMember action is deprecated. Use banChatMember action instead."
+        "kickChatMember action is deprecated. Use banChatMember action instead."
       )
 
       expect(subject.kick_chat_member).to eq("kick_chat_member_response")

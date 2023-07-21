@@ -6,6 +6,7 @@ RSpec.shared_context "set up workflow", shared_context: :metadata do |args|
   before do
     allow_any_instance_of(TelegramWorkflow::Action).to receive(:verifier).and_return(verifier)
     allow(TelegramWorkflow.config).to receive(:start_action).and_return(start_action)
+    allow(TelegramWorkflow.config).to receive(:tagged_logger?).and_return(false)
   end
 
   let!(:chat_id) { 1111111 }

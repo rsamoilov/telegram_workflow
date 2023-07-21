@@ -39,6 +39,10 @@ module TelegramWorkflow
       end
     end
 
+    def tagged_logger?
+      @tagged_logger ||= @logger.respond_to?(:tagged)
+    end
+
     def verify!
       blank_params = REQUIRED_PARAMS.select { |p| send(p).nil? }
 

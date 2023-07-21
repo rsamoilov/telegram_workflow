@@ -1,10 +1,14 @@
+require "securerandom"
+
 class TelegramWorkflow::Workflow
-  attr_reader :params, :client
+  attr_reader :params, :client, :logger
 
   def initialize(raw_params)
     @params  = TelegramWorkflow::Params.new(raw_params)
     @session = TelegramWorkflow::Session.new(@params)
+
     @logger = TelegramWorkflow.config.logger
+    @logger = @logger.tagged(SecureRandom.hex(8)) if TelegramWorkflow.config.tagged_logger?
 
     if @params.start?
       set_current_action(TelegramWorkflow.config.start_action)
@@ -23,7 +27,7 @@ class TelegramWorkflow::Workflow
       current_action.public_send(current_step) # setup callbacks
       current_action.__run_on_message # run a callback
     else
-      @logger.info "[TelegramWorkflow] Processing by shared handler"
+      @logger.info "Processing by shared handler"
     end
 
     while @redirect_to
@@ -47,10 +51,10 @@ class TelegramWorkflow::Workflow
   private
 
   def log_request
-    @logger.info "[TelegramWorkflow] Processing by #{current_action.class.name}##{current_step}"
+    @logger.info "Processing by #{current_action.class.name}##{current_step}"
 
     if TelegramWorkflow.config.webhook_url.nil?
-      @logger.info "[TelegramWorkflow] Parameters: #{@params.to_h}"
+      @logger.info "Parameters: #{@params.to_h}"
     end
   end
 
