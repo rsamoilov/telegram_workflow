@@ -1,3 +1,4 @@
+require "bundler/setup"
 require "telegram_workflow"
 require "date"
 

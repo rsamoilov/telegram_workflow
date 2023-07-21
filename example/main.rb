@@ -3,7 +3,7 @@ require_relative "environment"
 TelegramWorkflow.configure do |config|
   config.start_action = Actions::Start
   config.client = Client
-  config.session_store = TelegramWorkflow::Stores::File.new
+  config.session_store = TelegramWorkflow::Stores::InMemory.new
   config.api_token = <YOUR_TOKEN>
 end
 

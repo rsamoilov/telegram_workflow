@@ -20,6 +20,9 @@ class Actions::ListActions < TelegramWorkflow::Action
         Actions::SelectDoctor
       elsif params.callback_data == "list"
         Actions::ListAppointments
+      else
+        client.send_message text: "❗️Incorrect action"
+        :initial
       end
 
       redirect_to next_action
