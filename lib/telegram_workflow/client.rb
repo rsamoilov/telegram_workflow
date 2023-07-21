@@ -1,5 +1,5 @@
 class TelegramWorkflow::Client
-  API_VERSION = "5.5"
+  API_VERSION = "6.7"
   WebhookConfigPath = Pathname.new("tmp/telegram_workflow/webhook_config.txt")
 
   AVAILABLE_ACTIONS = %i(
@@ -45,6 +45,10 @@ class TelegramWorkflow::Client
     deleteChatPhoto
     setChatTitle
     setChatDescription
+    setMyDescription
+    getMyDescription
+    setMyShortDescription
+    getMyShortDescription
     pinChatMessage
     unpinChatMessage
     unpinAllChatMessages
@@ -57,9 +61,28 @@ class TelegramWorkflow::Client
     setChatStickerSet
     deleteChatStickerSet
     answerCallbackQuery
+    answerWebAppQuery
     setMyCommands
     deleteMyCommands
     getMyCommands
+    setChatMenuButton
+    getChatMenuButton 
+    setMyDefaultAdministratorRights
+    getMyDefaultAdministratorRights
+    getCustomEmojiStickers
+
+    createForumTopic
+    editForumTopic
+    closeForumTopic
+    reopenForumTopic
+    deleteForumTopic
+    unpinAllForumTopicMessages
+    getForumTopicIconStickers
+    editGeneralForumTopic
+    closeGeneralForumTopic
+    reopenGeneralForumTopic
+    hideGeneralForumTopic
+    unhideGeneralForumTopic
 
     editMessageText
     editMessageCaption
@@ -75,7 +98,7 @@ class TelegramWorkflow::Client
     addStickerToSet
     setStickerPositionInSet
     deleteStickerFromSet
-    setStickerSetThumb
+    setStickerSetThumbnail
 
     answerInlineQuery
 
